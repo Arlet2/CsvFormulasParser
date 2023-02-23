@@ -116,5 +116,5 @@ func ParseCell(cell string) (formula, error) {
 
 	action := operations.AllowedOperations[regex.FindAllString(cell, 1)[0]]
 
-	return formula{firstOperand: firstOperand, secondOperand: secondOperand, action: action}, nil
+	return formula{FirstOperand: firstOperand, SecondOperand: secondOperand, Action: action}, nil
 }

@@ -16,27 +16,27 @@ func TestCellParsing(t *testing.T) {
 				t.FailNow()
 			}
 
-			if formula.firstOperand.isLink() {
+			if formula.FirstOperand.isLink() {
 				t.Logf("\tFail on test %d. 1 was parsed like link", testID)
 				t.FailNow()
 			}
 
-			if formula.secondOperand.isLink() {
+			if formula.SecondOperand.isLink() {
 				t.Logf("\tFail on test %d. 2 was parsed like link", testID)
 				t.FailNow()
 			}
 
-			if formula.firstOperand.getConstant() != 1 {
-				t.Logf("\tFail on test %d. Expected 1 but got %d", testID, formula.firstOperand.getConstant())
+			if formula.FirstOperand.getConstant() != 1 {
+				t.Logf("\tFail on test %d. Expected 1 but got %d", testID, formula.FirstOperand.getConstant())
 				t.FailNow()
 			}
 
-			if formula.secondOperand.getConstant() != 2 {
-				t.Logf("\tFail on test %d. Expected 2 but got %d", testID, formula.secondOperand.getConstant())
+			if formula.SecondOperand.getConstant() != 2 {
+				t.Logf("\tFail on test %d. Expected 2 but got %d", testID, formula.SecondOperand.getConstant())
 				t.FailNow()
 			}
 
-			value, err := formula.action(1, 2)
+			value, err := formula.Action(1, 2)
 
 			if err != nil {
 				t.Logf("\tFail on test %d. Found error when use operation: "+err.Error(), testID)
@@ -70,27 +70,27 @@ func TestCellParsing(t *testing.T) {
 				t.FailNow()
 			}
 
-			if !formula.firstOperand.isLink() {
+			if !formula.FirstOperand.isLink() {
 				t.Logf("\tFail on test %d. Cell30 was parsed like constant", testID)
 				t.FailNow()
 			}
 
-			if !formula.secondOperand.isLink() {
+			if !formula.SecondOperand.isLink() {
 				t.Logf("\tFail on test %d. Cell20 was parsed like constant", testID)
 				t.FailNow()
 			}
 
-			if formula.firstOperand.getLink() != "Cell30" {
-				t.Logf("\tFail on test %d. Expected Cell30 but got "+formula.firstOperand.getLink(), testID)
+			if formula.FirstOperand.getLink() != "Cell30" {
+				t.Logf("\tFail on test %d. Expected Cell30 but got "+formula.FirstOperand.getLink(), testID)
 				t.FailNow()
 			}
 
-			if formula.secondOperand.getLink() != "Cell20" {
-				t.Logf("\tFail on test %d. Expected Cell20 but got "+formula.secondOperand.getLink(), testID)
+			if formula.SecondOperand.getLink() != "Cell20" {
+				t.Logf("\tFail on test %d. Expected Cell20 but got "+formula.SecondOperand.getLink(), testID)
 				t.FailNow()
 			}
 
-			value, err := formula.action(1, 1)
+			value, err := formula.Action(1, 1)
 
 			if err != nil {
 				t.Logf("\tFail on test %d. Found error after action: "+err.Error(), testID)
@@ -124,27 +124,27 @@ func TestCellParsing(t *testing.T) {
 				t.FailNow()
 			}
 
-			if formula.firstOperand.isLink() {
+			if formula.FirstOperand.isLink() {
 				t.Logf("\tFail on test %d. 2 was parsed like link", testID)
 				t.FailNow()
 			}
 
-			if !formula.secondOperand.isLink() {
+			if !formula.SecondOperand.isLink() {
 				t.Logf("\tFail on test %d. Cell30 was parsed like constant", testID)
 				t.FailNow()
 			}
 
-			if formula.firstOperand.getConstant() != 2 {
-				t.Logf("\tFail on test %d. Expected 2 but got %d", testID, formula.firstOperand.getConstant())
+			if formula.FirstOperand.getConstant() != 2 {
+				t.Logf("\tFail on test %d. Expected 2 but got %d", testID, formula.FirstOperand.getConstant())
 				t.FailNow()
 			}
 
-			if formula.secondOperand.getLink() != "Cell30" {
-				t.Logf("\tFail on test %d. Expected Cell30 but got "+formula.secondOperand.getLink(), testID)
+			if formula.SecondOperand.getLink() != "Cell30" {
+				t.Logf("\tFail on test %d. Expected Cell30 but got "+formula.SecondOperand.getLink(), testID)
 				t.FailNow()
 			}
 
-			value, err := formula.action(1, 2)
+			value, err := formula.Action(1, 2)
 
 			if err != nil {
 				t.Logf("\tFail on test %d. Found error from action: "+err.Error(), testID)
