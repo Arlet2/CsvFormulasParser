@@ -1,14 +1,15 @@
 package format
+
 import (
-	"io"
 	"fmt"
+	"io"
 	"os"
 )
 
 type Csv struct {
 	ColHeaders map[string]int
 	RowHeaders map[string]int
-	Data [][]string
+	Data       [][]string
 }
 
 func (csv Csv) PrintWithWriter(writer io.Writer) {

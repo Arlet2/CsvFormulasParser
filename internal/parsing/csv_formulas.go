@@ -8,7 +8,7 @@ import (
 	"test_task/internal/operations"
 )
 
-type operand interface{
+type operand interface {
 	IsLink() bool
 	GetConstant() int
 	GetLink() string
@@ -47,15 +47,15 @@ func (constant) GetLink() string {
 }
 
 type formula struct {
-	FirstOperand operand
+	FirstOperand  operand
 	SecondOperand operand
-	Action operations.Operation
+	Action        operations.Operation
 }
 
 type FormulaParseError error
 
 func IsFormula(input string) bool {
-	regex := regexp.MustCompile(`=[A-z0-9]+[`+GetRegexOperations()+`][A-z0-9]+`)
+	regex := regexp.MustCompile(`=[A-z0-9]+[` + GetRegexOperations() + `][A-z0-9]+`)
 
 	return regex.FindAllString(input, 1) != nil
 }
@@ -64,14 +64,14 @@ func GetRegexOperations() string {
 	regexOperations := ""
 	for key := range operations.AllowedOperations {
 		// экранируем для регулярок
-		regexOperations += "\\"+key
+		regexOperations += "\\" + key
 	}
 	return regexOperations
 }
 
 func ParseCell(cell string) (formula, error) {
 	if cell[0] != '=' {
-		return formula{}, errors.New(cell+" is not a formula. Formulas starts from =").(FormulaParseError)
+		return formula{}, errors.New(cell + " is not a formula. Formulas starts from =").(FormulaParseError)
 	}
 	cell = strings.ReplaceAll(cell, " ", "")
 	cell = strings.ReplaceAll(cell, "\t", "")
@@ -80,10 +80,10 @@ func ParseCell(cell string) (formula, error) {
 
 	if !IsFormula(cell) {
 		regexOperations = strings.ReplaceAll(regexOperations, "\\", "")
-		return formula{}, errors.New("incorrect formula. Formula need to be in format =OP1 ["+regexOperations+"] OP2")
+		return formula{}, errors.New("incorrect formula. Formula need to be in format =OP1 [" + regexOperations + "] OP2")
 	}
 
-	// Дальнейшие регулярки точно найдут совпадения, 
+	// Дальнейшие регулярки точно найдут совпадения,
 	// так как они являются лишь частями регулярки, которая проверялась до этого (функция IsFormula)
 
 	regex := regexp.MustCompile(`[A-z0-9]+`)
@@ -112,7 +112,7 @@ func ParseCell(cell string) (formula, error) {
 		secondOperand = constant{int(numericValue)}
 	}
 
-	regex = regexp.MustCompile(`[+`+regexOperations+`+]`)
+	regex = regexp.MustCompile(`[+` + regexOperations + `+]`)
 
 	action := operations.AllowedOperations[regex.FindAllString(cell, 1)[0]]
 

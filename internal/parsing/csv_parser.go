@@ -38,7 +38,7 @@ func ParseCsv(file io.Reader) (format.Csv, error) {
 		if err == nil {
 			return format.Csv{}, errors.New("названия столбцов не должны быть числами").(CsvParseError)
 		}
-		colHeaders[headers[i]] = i-1
+		colHeaders[headers[i]] = i - 1
 	}
 
 	rowHeaders := make(map[string]int, 0)

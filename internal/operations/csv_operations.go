@@ -10,21 +10,21 @@ var AllowedOperations = map[string]Operation{
 
 type Operation func(int, int) (int, error)
 
-func add (a int, b int) (int, error) {
-	return a+b, nil
+func add(a int, b int) (int, error) {
+	return a + b, nil
 }
 
-func sub (a int, b int) (int, error) {
-	return a-b, nil
+func sub(a int, b int) (int, error) {
+	return a - b, nil
 }
 
-func mul (a int, b int) (int, error) {
-	return a*b, nil
+func mul(a int, b int) (int, error) {
+	return a * b, nil
 }
 
-func div (a int, b int) (int, error) {
+func div(a int, b int) (int, error) {
 	if b == 0 {
 		return 0, errors.New("деление на ноль невозможно")
 	}
-	return a/b, nil
+	return a / b, nil
 }

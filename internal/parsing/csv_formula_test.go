@@ -6,7 +6,7 @@ func TestCellParsing(t *testing.T) {
 	t.Log("Start check parsing cells.")
 	{
 		testID := 0
-		
+
 		t.Logf("\tTest %d: check parsing only numbers formula", testID)
 		{
 			formula, err := ParseCell("=1+2")

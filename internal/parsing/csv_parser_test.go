@@ -12,7 +12,7 @@ func TestParsing(t *testing.T) {
 	t.Log("Start check parsing of CSV files.")
 	{
 		testID := 0
-		
+
 		t.Logf("\tTest %d: check parsing example file", testID)
 		{
 			reader := strings.NewReader(",A,B,Cell\n1,1,0,1\n2,2,=A1+Cell30,0\n30,0,=B1+A1,5")
@@ -40,7 +40,7 @@ func TestParsing(t *testing.T) {
 				t.Logf("\tFail on test %d. Data were parsed wrong: %q", testID, csv.Data)
 				t.Fail()
 			}
-			
+
 		}
 		testID++
 
@@ -58,7 +58,7 @@ func TestParsing(t *testing.T) {
 				t.Logf("\tFail on test %d. Expected CsvParseError but found another: "+err.Error(), testID)
 				t.Fail()
 			}
-			
+
 		}
 		testID++
 
@@ -76,7 +76,7 @@ func TestParsing(t *testing.T) {
 				t.Logf("\tFail on test %d. Expected CsvParseError but found another: "+err.Error(), testID)
 				t.Fail()
 			}
-			
+
 		}
 		testID++
 
@@ -94,7 +94,7 @@ func TestParsing(t *testing.T) {
 				t.Logf("\tFail on test %d. Expected CsvParseError but found another: "+err.Error(), testID)
 				t.Fail()
 			}
-			
+
 		}
 		testID++
 
@@ -110,12 +110,12 @@ func TestParsing(t *testing.T) {
 			}
 
 			if !reflect.DeepEqual(csv.ColHeaders, map[string]int{"A": 0, "B": 1, "Cell": 2}) ||
-				!reflect.DeepEqual(csv.RowHeaders, map[string]int {"1": 0}) ||
+				!reflect.DeepEqual(csv.RowHeaders, map[string]int{"1": 0}) ||
 				!reflect.DeepEqual(csv.Data[0], []string{"1", "0", "1"}) {
 				t.Logf("Fail on test %d. Data were parsed wrong %q", testID, csv)
 				t.Fail()
 			}
-			
+
 		}
 		testID++
 	}
@@ -145,7 +145,7 @@ func TestPrinting(t *testing.T) {
 				t.Logf("\tFail on test %d. Expected another output but got "+buf.String(), testID)
 				t.Fail()
 			}
-			
+
 		}
 		testID++
 
@@ -168,7 +168,7 @@ func TestPrinting(t *testing.T) {
 				t.Logf("\tFail on test %d. Expected another output but got "+buf.String(), testID)
 				t.Fail()
 			}
-			
+
 		}
 		testID++
 	}
