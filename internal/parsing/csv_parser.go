@@ -11,24 +11,31 @@ import (
 )
 
 type Csv struct {
-	colHeaders []string
-	rowHeaders []int
+	colHeaders map[string]int
+	rowHeaders map[string]int
 	data [][]string
 }
 
 func (csv Csv) PrintWithWriter(writer io.Writer) {
-	for index, value := range csv.colHeaders {
+	orderedColHeaders := make([]string, len(csv.colHeaders))
+	for key, value := range csv.colHeaders {
+		orderedColHeaders[value] = key
+	}
+
+	fmt.Fprint(writer, ",")
+	for index, value := range orderedColHeaders {
 		fmt.Fprint(writer, value)
 		if index != len(csv.colHeaders)-1 {
 			fmt.Fprint(writer, ",")
 		}
 	}
 	fmt.Fprintln(writer)
-	for index, line := range csv.data {
-		fmt.Fprintf(writer, "%d,", csv.rowHeaders[index])
-		for jndex, element := range line {
+
+	for key, value := range csv.rowHeaders {
+		fmt.Fprint(writer, key+",")
+		for index, element := range csv.data[value] {
 			fmt.Fprint(writer, element)
-			if jndex != len(line)-1 {
+			if index != len(csv.data[value])-1 {
 				fmt.Fprint(writer, ",")
 			}
 		}
@@ -56,20 +63,23 @@ func ParseCsv(file io.Reader) (Csv, error) {
 		return Csv{}, errors.New("первая ячейка должна быть пустой").(CsvParseError)
 	}
 
-	for _, value := range headers {
+	colHeaders := make(map[string]int)
+
+	for i := 1; i < len(headers); i++ {
 		// проверяем на целые числа
-		_, err := strconv.ParseInt(value, 10, 64)
+		_, err := strconv.ParseInt(headers[i], 10, 64)
 		if err == nil {
 			return Csv{}, errors.New("названия столбцов не должны быть числами").(CsvParseError)
 		}
 		// проверяем на числа с плавающей точкой
-		_, err = strconv.ParseFloat(value, 64)
+		_, err = strconv.ParseFloat(headers[i], 64)
 		if err == nil {
 			return Csv{}, errors.New("названия столбцов не должны быть числами").(CsvParseError)
 		}
+		colHeaders[headers[i]] = i-1
 	}
 
-	rowHeaders := make([]int, 0)
+	rowHeaders := make(map[string]int, 0)
 	data := make([][]string, 0)
 
 	var values []string
@@ -85,7 +95,7 @@ func ParseCsv(file io.Reader) (Csv, error) {
 			return Csv{}, errors.New("номер строки должен быть положительным числом").(CsvParseError)
 		}
 
-		rowHeaders = append(rowHeaders, int(rowIndex))
+		rowHeaders[values[0]] = len(data)
 
 		data = append(data, values[1:])
 	}
@@ -94,5 +104,5 @@ func ParseCsv(file io.Reader) (Csv, error) {
 		return Csv{}, errors.Join(scanner.Err())
 	}
 
-	return Csv{colHeaders: headers, rowHeaders: rowHeaders, data: data}, nil
+	return Csv{colHeaders: colHeaders, rowHeaders: rowHeaders, data: data}, nil
 }
