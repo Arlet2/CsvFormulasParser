@@ -54,30 +54,39 @@ type formula struct {
 
 type FormulaParseError error
 
-func parseCell(cell string) (formula, error) {
+func IsFormula(input string) bool {
+	regex := regexp.MustCompile(`=[A-z0-9]+[`+GetRegexOperations()+`][A-z0-9]+`)
+
+	return regex.FindAllString(input, 1) != nil
+}
+
+func GetRegexOperations() string {
+	regexOperations := ""
+	for key := range calculating.AllowedOperations {
+		// экранируем для регулярок
+		regexOperations += "\\"+key
+	}
+	return regexOperations
+}
+
+func ParseCell(cell string) (formula, error) {
 	if cell[0] != '=' {
 		return formula{}, errors.New(cell+" is not a formula. Formulas starts from =").(FormulaParseError)
 	}
 	cell = strings.ReplaceAll(cell, " ", "")
 	cell = strings.ReplaceAll(cell, "\t", "")
 
-	regexOperations := ""
-	for key := range calculating.AllowedOperations {
-		// экранируем для регулярок
-		regexOperations += "\\"+key
-	}
+	regexOperations := GetRegexOperations()
 
-	regex := regexp.MustCompile(`=[A-z0-9]+[`+regexOperations+`][A-z0-9]+`)
-
-	if regex.FindAllString(cell, 1) == nil {
+	if !IsFormula(cell) {
 		regexOperations = strings.ReplaceAll(regexOperations, "\\", "")
 		return formula{}, errors.New("incorrect formula. Formula need to be in format =OP1 ["+regexOperations+"] OP2")
 	}
 
 	// Дальнейшие регулярки точно найдут совпадения, 
-	// так как они являются лишь частями регулярки, которая проверялась до этого
+	// так как они являются лишь частями регулярки, которая проверялась до этого (функция IsFormula)
 
-	regex = regexp.MustCompile(`[A-z0-9]+`)
+	regex := regexp.MustCompile(`[A-z0-9]+`)
 
 	notParsedOperands := regex.FindAllString(cell, 2)
 
