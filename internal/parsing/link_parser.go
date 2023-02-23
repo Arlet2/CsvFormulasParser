@@ -7,7 +7,7 @@ func ParseLink(link link) (string, string) {
 
 	var col, row string
 	regex := regexp.MustCompile(`[A-z]+`)
-	
+
 	col = regex.FindString(link.value)
 
 	regex = regexp.MustCompile(`[0-9]+`)
