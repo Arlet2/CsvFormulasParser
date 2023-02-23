@@ -9,7 +9,7 @@ func TestCellParsing(t *testing.T) {
 		
 		t.Logf("\tTest %d: check parsing only numbers formula", testID)
 		{
-			formula, err := parseCell("=1+2")
+			formula, err := ParseCell("=1+2")
 
 			if err != nil {
 				t.Logf("\tFail on test %d. Found error: "+err.Error(), testID)
@@ -52,7 +52,7 @@ func TestCellParsing(t *testing.T) {
 
 		t.Logf("\tTest %d: check missing = symbol on start", testID)
 		{
-			_, err := parseCell("Cell30+Cell20")
+			_, err := ParseCell("Cell30+Cell20")
 
 			if err == nil {
 				t.Logf("\tFail on test %d. Expected error but nothing got", testID)
@@ -63,7 +63,7 @@ func TestCellParsing(t *testing.T) {
 
 		t.Logf("\tTest %d: check parsing formula only with links", testID)
 		{
-			formula, err := parseCell("=Cell30+Cell20")
+			formula, err := ParseCell("=Cell30+Cell20")
 
 			if err != nil {
 				t.Logf("\tFail on test %d. Found error: "+err.Error(), testID)
@@ -106,7 +106,7 @@ func TestCellParsing(t *testing.T) {
 
 		t.Logf("\tTest %d: check not allowed operation", testID)
 		{
-			_, err := parseCell("=2^2")
+			_, err := ParseCell("=2^2")
 
 			if err == nil {
 				t.Logf("\tFail on test %d. Expected error but nothing got", testID)
@@ -117,7 +117,7 @@ func TestCellParsing(t *testing.T) {
 
 		t.Logf("\tTest %d: check link and constant formula", testID)
 		{
-			formula, err := parseCell("=2+Cell30")
+			formula, err := ParseCell("=2+Cell30")
 
 			if err != nil {
 				t.Logf("\tFail on test %d. Found error: "+err.Error(), testID)

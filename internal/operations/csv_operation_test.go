@@ -1,4 +1,4 @@
-package calculating
+package operations
 import (
 	"testing"
 )

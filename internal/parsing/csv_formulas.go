@@ -5,7 +5,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"test_task/internal/calculating"
+	"test_task/internal/operations"
 )
 
 type operand interface{
@@ -49,7 +49,7 @@ func (constant) getLink() string {
 type formula struct {
 	firstOperand operand
 	secondOperand operand
-	action calculating.Operation
+	action operations.Operation
 }
 
 type FormulaParseError error
@@ -62,7 +62,7 @@ func IsFormula(input string) bool {
 
 func GetRegexOperations() string {
 	regexOperations := ""
-	for key := range calculating.AllowedOperations {
+	for key := range operations.AllowedOperations {
 		// экранируем для регулярок
 		regexOperations += "\\"+key
 	}
@@ -114,7 +114,7 @@ func ParseCell(cell string) (formula, error) {
 
 	regex = regexp.MustCompile(`[+`+regexOperations+`+]`)
 
-	action := calculating.AllowedOperations[regex.FindAllString(cell, 1)[0]]
+	action := operations.AllowedOperations[regex.FindAllString(cell, 1)[0]]
 
 	return formula{firstOperand: firstOperand, secondOperand: secondOperand, action: action}, nil
 }
