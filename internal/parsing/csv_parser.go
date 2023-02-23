@@ -10,7 +10,6 @@ import (
 	"strings"
 )
 
-type CsvParseError error
 type Csv struct {
 	colHeaders []string
 	rowHeaders []int
@@ -40,6 +39,8 @@ func (csv Csv) PrintWithWriter(writer io.Writer) {
 func (csv Csv) Print() {
 	csv.PrintWithWriter(os.Stdout)
 }
+
+type CsvParseError error
 
 func ParseCsv(file io.Reader) (Csv, error) {
 
