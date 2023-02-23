@@ -9,24 +9,24 @@ import (
 )
 
 type operand interface{
-	isLink() bool
-	getConstant() int
-	getLink() string
+	IsLink() bool
+	GetConstant() int
+	GetLink() string
 }
 
 type link struct {
 	value string
 }
 
-func (link) isLink() bool {
+func (link) IsLink() bool {
 	return true
 }
 
-func (link) getConstant() int {
+func (link) GetConstant() int {
 	return 0
 }
 
-func (link link) getLink() string {
+func (link link) GetLink() string {
 	return link.value
 }
 
@@ -34,15 +34,15 @@ type constant struct {
 	value int
 }
 
-func (constant) isLink() bool {
+func (constant) IsLink() bool {
 	return false
 }
 
-func (constant constant) getConstant() int {
+func (constant constant) GetConstant() int {
 	return constant.value
 }
 
-func (constant) getLink() string {
+func (constant) GetLink() string {
 	return ""
 }
 
