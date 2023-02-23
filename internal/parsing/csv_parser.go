@@ -17,6 +17,7 @@ type Csv struct {
 }
 
 func (csv Csv) PrintWithWriter(writer io.Writer) {
+	// порядок ключей в map не детерминирован
 	orderedColHeaders := make([]string, len(csv.colHeaders))
 	for key, value := range csv.colHeaders {
 		orderedColHeaders[value] = key
@@ -31,16 +32,24 @@ func (csv Csv) PrintWithWriter(writer io.Writer) {
 	}
 	fmt.Fprintln(writer)
 
+	orderedRowHeaders := make([]string, len(csv.rowHeaders))
+
 	for key, value := range csv.rowHeaders {
-		fmt.Fprint(writer, key+",")
-		for index, element := range csv.data[value] {
+		orderedRowHeaders[value] = key
+	}
+
+	for index, line := range csv.data {
+		fmt.Fprint(writer, orderedRowHeaders[index]+",")
+
+		for jndex, element := range line {
 			fmt.Fprint(writer, element)
-			if index != len(csv.data[value])-1 {
+			if jndex != len(csv.data[index])-1 {
 				fmt.Fprint(writer, ",")
 			}
 		}
 		fmt.Fprintln(writer)
 	}
+
 }
 
 func (csv Csv) Print() {
