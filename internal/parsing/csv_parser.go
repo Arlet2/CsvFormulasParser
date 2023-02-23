@@ -3,73 +3,26 @@ package parsing
 import (
 	"bufio"
 	"errors"
-	"fmt"
 	"io"
-	"os"
 	"strconv"
 	"strings"
+	"test_task/internal/format"
 )
-
-type Csv struct {
-	colHeaders map[string]int
-	rowHeaders map[string]int
-	data [][]string
-}
-
-func (csv Csv) PrintWithWriter(writer io.Writer) {
-	// порядок ключей в map не детерминирован
-	orderedColHeaders := make([]string, len(csv.colHeaders))
-	for key, value := range csv.colHeaders {
-		orderedColHeaders[value] = key
-	}
-
-	fmt.Fprint(writer, ",")
-	for index, value := range orderedColHeaders {
-		fmt.Fprint(writer, value)
-		if index != len(csv.colHeaders)-1 {
-			fmt.Fprint(writer, ",")
-		}
-	}
-	fmt.Fprintln(writer)
-
-	orderedRowHeaders := make([]string, len(csv.rowHeaders))
-
-	for key, value := range csv.rowHeaders {
-		orderedRowHeaders[value] = key
-	}
-
-	for index, line := range csv.data {
-		fmt.Fprint(writer, orderedRowHeaders[index]+",")
-
-		for jndex, element := range line {
-			fmt.Fprint(writer, element)
-			if jndex != len(csv.data[index])-1 {
-				fmt.Fprint(writer, ",")
-			}
-		}
-		fmt.Fprintln(writer)
-	}
-
-}
-
-func (csv Csv) Print() {
-	csv.PrintWithWriter(os.Stdout)
-}
 
 type CsvParseError error
 
-func ParseCsv(file io.Reader) (Csv, error) {
+func ParseCsv(file io.Reader) (format.Csv, error) {
 
 	scanner := bufio.NewScanner(file)
 
 	if !scanner.Scan() {
-		return Csv{}, errors.New("файл пустой").(CsvParseError)
+		return format.Csv{}, errors.New("файл пустой").(CsvParseError)
 	}
 
 	headers := strings.Split(scanner.Text(), ",")
 
 	if headers[0] != "" {
-		return Csv{}, errors.New("первая ячейка должна быть пустой").(CsvParseError)
+		return format.Csv{}, errors.New("первая ячейка должна быть пустой").(CsvParseError)
 	}
 
 	colHeaders := make(map[string]int)
@@ -78,12 +31,12 @@ func ParseCsv(file io.Reader) (Csv, error) {
 		// проверяем на целые числа
 		_, err := strconv.ParseInt(headers[i], 10, 64)
 		if err == nil {
-			return Csv{}, errors.New("названия столбцов не должны быть числами").(CsvParseError)
+			return format.Csv{}, errors.New("названия столбцов не должны быть числами").(CsvParseError)
 		}
 		// проверяем на числа с плавающей точкой
 		_, err = strconv.ParseFloat(headers[i], 64)
 		if err == nil {
-			return Csv{}, errors.New("названия столбцов не должны быть числами").(CsvParseError)
+			return format.Csv{}, errors.New("названия столбцов не должны быть числами").(CsvParseError)
 		}
 		colHeaders[headers[i]] = i-1
 	}
@@ -97,11 +50,11 @@ func ParseCsv(file io.Reader) (Csv, error) {
 		rowIndex, err := strconv.ParseInt(values[0], 10, 64)
 
 		if err != nil {
-			return Csv{}, errors.New("номер строки должен быть числом").(CsvParseError)
+			return format.Csv{}, errors.New("номер строки должен быть числом").(CsvParseError)
 		}
 
 		if rowIndex <= 0 {
-			return Csv{}, errors.New("номер строки должен быть положительным числом").(CsvParseError)
+			return format.Csv{}, errors.New("номер строки должен быть положительным числом").(CsvParseError)
 		}
 
 		rowHeaders[values[0]] = len(data)
@@ -110,8 +63,8 @@ func ParseCsv(file io.Reader) (Csv, error) {
 	}
 
 	if scanner.Err() != nil {
-		return Csv{}, errors.Join(scanner.Err())
+		return format.Csv{}, errors.Join(scanner.Err())
 	}
 
-	return Csv{colHeaders: colHeaders, rowHeaders: rowHeaders, data: data}, nil
+	return format.Csv{ColHeaders: colHeaders, RowHeaders: rowHeaders, Data: data}, nil
 }

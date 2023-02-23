@@ -24,20 +24,20 @@ func TestParsing(t *testing.T) {
 				t.Fail()
 			}
 
-			if !reflect.DeepEqual(csv.colHeaders, map[string]int{"A": 0, "B": 1, "Cell": 2}) {
-				t.Logf("\tFail on test %d. Headers were parsed wrong: %q", testID, csv.colHeaders)
+			if !reflect.DeepEqual(csv.ColHeaders, map[string]int{"A": 0, "B": 1, "Cell": 2}) {
+				t.Logf("\tFail on test %d. Headers were parsed wrong: %q", testID, csv.ColHeaders)
 				t.Fail()
 			}
 
-			if !reflect.DeepEqual(csv.rowHeaders, map[string]int{"1": 0, "2": 1, "30": 2}) {
-				t.Logf("\tFail on test %d. Row headers were parsed wrong: %q", testID, csv.rowHeaders)
+			if !reflect.DeepEqual(csv.RowHeaders, map[string]int{"1": 0, "2": 1, "30": 2}) {
+				t.Logf("\tFail on test %d. Row headers were parsed wrong: %q", testID, csv.RowHeaders)
 				t.Fail()
 			}
 
-			if !reflect.DeepEqual(csv.data[0], []string{"1", "0", "1"}) ||
-				!reflect.DeepEqual(csv.data[1], []string{"2", "=A1+Cell30", "0"}) ||
-				!reflect.DeepEqual(csv.data[2], []string{"0", "=B1+A1", "5"}) {
-				t.Logf("\tFail on test %d. Data were parsed wrong: %q", testID, csv.data)
+			if !reflect.DeepEqual(csv.Data[0], []string{"1", "0", "1"}) ||
+				!reflect.DeepEqual(csv.Data[1], []string{"2", "=A1+Cell30", "0"}) ||
+				!reflect.DeepEqual(csv.Data[2], []string{"0", "=B1+A1", "5"}) {
+				t.Logf("\tFail on test %d. Data were parsed wrong: %q", testID, csv.Data)
 				t.Fail()
 			}
 			
@@ -109,9 +109,9 @@ func TestParsing(t *testing.T) {
 				t.Fail()
 			}
 
-			if !reflect.DeepEqual(csv.colHeaders, map[string]int{"A": 0, "B": 1, "Cell": 2}) ||
-				!reflect.DeepEqual(csv.rowHeaders, map[string]int {"1": 0}) ||
-				!reflect.DeepEqual(csv.data[0], []string{"1", "0", "1"}) {
+			if !reflect.DeepEqual(csv.ColHeaders, map[string]int{"A": 0, "B": 1, "Cell": 2}) ||
+				!reflect.DeepEqual(csv.RowHeaders, map[string]int {"1": 0}) ||
+				!reflect.DeepEqual(csv.Data[0], []string{"1", "0", "1"}) {
 				t.Logf("Fail on test %d. Data were parsed wrong %q", testID, csv)
 				t.Fail()
 			}
