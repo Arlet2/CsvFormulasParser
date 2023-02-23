@@ -47,9 +47,9 @@ func (constant) getLink() string {
 }
 
 type formula struct {
-	firstOperand operand
-	secondOperand operand
-	action operations.Operation
+	FirstOperand operand
+	SecondOperand operand
+	Action operations.Operation
 }
 
 type FormulaParseError error
