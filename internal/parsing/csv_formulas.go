@@ -71,7 +71,7 @@ func GetRegexOperations() string {
 
 func ParseCell(cell string) (formula, error) {
 	if cell[0] != '=' {
-		return formula{}, errors.New(cell + " is not a formula. Formulas starts from =").(FormulaParseError)
+		return formula{}, errors.New(cell + " не формула. Формулы начинаются с =").(FormulaParseError)
 	}
 	cell = strings.ReplaceAll(cell, " ", "")
 	cell = strings.ReplaceAll(cell, "\t", "")
@@ -80,7 +80,8 @@ func ParseCell(cell string) (formula, error) {
 
 	if !IsFormula(cell) {
 		regexOperations = strings.ReplaceAll(regexOperations, "\\", "")
-		return formula{}, errors.New("incorrect formula. Formula need to be in format =OP1 [" + regexOperations + "] OP2")
+		return formula{},
+			errors.New(cell + " неправильная формула. Формула должна быть в формате =OP1 [" + regexOperations + "] OP2")
 	}
 
 	// Дальнейшие регулярки точно найдут совпадения,
