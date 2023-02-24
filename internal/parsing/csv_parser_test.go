@@ -173,3 +173,55 @@ func TestPrinting(t *testing.T) {
 		testID++
 	}
 }
+
+func TestGetLinks(t *testing.T) {
+	t.Log("Start check getting links from indexes.")
+	{
+		testID := 0
+
+		t.Logf("\tTest %d: check getting simple link", testID)
+		{
+			reader := strings.NewReader(",A,B,Cell\n1,1,0,1\n2,2,=A1+Cell30,0\n30,0,=B1+A1,5")
+
+			csv, err := ParseCsv(reader)
+
+			if err != nil {
+				t.Logf("\tFail on test %d. Found error: "+err.Error(), testID)
+				t.Fail()
+			}
+
+			link, err := csv.GetLinkByIndexes(1, 1)
+
+			if err != nil {
+				t.Logf("\tFail on test %d. Found error: "+err.Error(), testID)
+				t.Fail()
+			}
+
+			if link != "B2" {
+				t.Logf("\tFail on test %d. Expected B2 but found "+link, testID)
+				t.Fail()
+			}
+		}
+		testID++
+
+		t.Logf("\tTest %d: check getting link from out of table", testID)
+		{
+			reader := strings.NewReader(",A,B,Cell\n1,1,0,1\n2,2,=A1+Cell30,0\n30,0,=B1+A1,5")
+
+			csv, err := ParseCsv(reader)
+
+			if err != nil {
+				t.Logf("\tFail on test %d. Found error: "+err.Error(), testID)
+				t.Fail()
+			}
+
+			_, err = csv.GetLinkByIndexes(5, 5)
+
+			if err == nil {
+				t.Logf("\tFail on test %d. Expected error but nothing got ", testID)
+				t.Fail()
+			}
+		}
+		testID++
+	}
+}
