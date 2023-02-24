@@ -11,7 +11,7 @@ func TestLinkParsing(t *testing.T) {
 
 		t.Logf("\tTest %d: check parsing simple link", testID)
 		{
-			col, row := ParseLink(link{"A10"})
+			col, row := ParseLink("A10")
 
 			if col != "A" {
 				t.Logf("\tFail on test %d. Expected A but found "+col, testID)
