@@ -59,6 +59,14 @@ func ParseCsv(file io.Reader) (format.Csv, error) {
 
 		rowHeaders[values[0]] = len(data)
 
+		for _, value := range values[1:] {
+			_, err := strconv.ParseInt(value, 10, 32)
+			// если это не формула и не целое число, то это недопустимое значение
+			if !IsFormula(value) && err != nil {
+				return format.Csv{}, errors.New("значения ячеек должны быть формулами или целыми числами").(CsvParseError)
+			}
+		}
+
 		data = append(data, values[1:])
 	}
 

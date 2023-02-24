@@ -118,6 +118,34 @@ func TestParsing(t *testing.T) {
 
 		}
 		testID++
+
+		t.Logf("\tTest %d: check parsing with float value in cell", testID)
+		{
+			reader := strings.NewReader(",A,B,Cell\n1,1.5,0,1\n")
+
+			_, err := ParseCsv(reader)
+
+			if err == nil {
+				t.Logf("Fail on test %d. Expected error but nothing got", testID)
+				t.Fail()
+			}
+
+		}
+		testID++
+
+		t.Logf("\tTest %d: check parsing with float value in cell", testID)
+		{
+			reader := strings.NewReader(",A,B,Cell\n1,faf,0,1\n")
+
+			_, err := ParseCsv(reader)
+
+			if err == nil {
+				t.Logf("Fail on test %d. Expected error but nothing got", testID)
+				t.Fail()
+			}
+
+		}
+		testID++
 	}
 }
 
