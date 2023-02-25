@@ -160,6 +160,20 @@ func TestParsing(t *testing.T) {
 
 		}
 		testID++
+
+		t.Logf("\tTest %d: check parsing with extra cell in one row", testID)
+		{
+			reader := strings.NewReader(",A,B,Cell\n1,1,0,1,0\n2,2,=A1+Cell30,0\n30,0,=B1+A1,5")
+
+			_, err := ParseCsv(reader)
+
+			if err != nil {
+				t.Logf("Fail on test %d. Found error: "+err.Error(), testID)
+				t.Fail()
+			}
+
+		}
+		testID++
 	}
 }
 
