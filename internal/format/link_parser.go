@@ -2,6 +2,7 @@ package format
 
 import "regexp"
 
+// Return col, row from parsed link
 func ParseLink(link string) (string, string) {
 	// Ссылка корректна, так как была проверена при парсинге формул
 
