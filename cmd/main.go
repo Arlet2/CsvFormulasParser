@@ -36,7 +36,7 @@ func main() {
 	//todo разобраться с кастингом ошибок???
 	if err != nil {
 		if _, ok := err.(calculating.TreeCreatingError); ok {
-			fmt.Println("Ошибка при работе с ячейками: "+err.Error())
+			fmt.Println("Ошибка при работе с ячейками: " + err.Error())
 		} else if _, ok := err.(operations.CalculatingError); ok {
 			fmt.Println("Ошибка вычислений: " + err.Error())
 		} else {
@@ -48,14 +48,14 @@ func main() {
 	sortedNodes, err := tree.SortTree()
 
 	if err != nil {
-		fmt.Println("Ошибка при обработке ячеек: "+err.Error())
+		fmt.Println("Ошибка при обработке ячеек: " + err.Error())
 		return
 	}
 
 	err = calculating.CalculateNodes(&csv, sortedNodes)
 
 	if err != nil {
-		fmt.Println("Ошибка при вычислении ячеек: "+err.Error())
+		fmt.Println("Ошибка при вычислении ячеек: " + err.Error())
 	}
 
 	csv.Print()

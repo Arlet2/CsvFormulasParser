@@ -34,8 +34,8 @@ func TestLinkExisting(t *testing.T) {
 
 		t.Logf("\tTest %d: check existing link", testID)
 		{
-			csv := Csv{ColHeaders: map[string]int{"A": 0, "B": 1}, 
-					RowHeaders: map[string]int{"30": 0, "20": 1}, Data: [][]string{}}
+			csv := Csv{ColHeaders: map[string]int{"A": 0, "B": 1},
+				RowHeaders: map[string]int{"30": 0, "20": 1}, Data: [][]string{}}
 
 			if !csv.IsLinkExist("A30") {
 				t.Logf("\tFail on test %d. Expected true but found false", testID)
@@ -47,8 +47,8 @@ func TestLinkExisting(t *testing.T) {
 
 		t.Logf("\tTest %d: check missing link", testID)
 		{
-			csv := Csv{ColHeaders: map[string]int{"A": 0, "B": 1}, 
-					RowHeaders: map[string]int{"30": 0, "20": 1}, Data: [][]string{}}
+			csv := Csv{ColHeaders: map[string]int{"A": 0, "B": 1},
+				RowHeaders: map[string]int{"30": 0, "20": 1}, Data: [][]string{}}
 
 			if csv.IsLinkExist("Cell30") {
 				t.Logf("\tFail on test %d. Expected false but found true", testID)

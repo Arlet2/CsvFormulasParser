@@ -68,7 +68,7 @@ func GetRegexOperations() string {
 	return regexOperations
 }
 
-func ParseFormula(cellFormula string) (Formula) {
+func ParseFormula(cellFormula string) Formula {
 	// ошибки на формулы должны были быть проверены до (во время парсинга). Функция должна запускаться только для формул
 	cellFormula = strings.ReplaceAll(cellFormula, " ", "")
 	cellFormula = strings.ReplaceAll(cellFormula, "\t", "")

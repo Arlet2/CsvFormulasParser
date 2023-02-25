@@ -146,7 +146,6 @@ func TestSortingTree(t *testing.T) {
 				t.Fail()
 			}
 
-
 			if !reflect.DeepEqual(sortedNodes, []string{"B2", "Cell30", "B30", "A1", "B1"}) &&
 				!reflect.DeepEqual(sortedNodes, []string{"B30", "B1", "B2", "Cell30", "A1"}) {
 				t.Logf("\tFail on test %d. Found another (maybe correct) sorting: %q", testID, sortedNodes)
