@@ -82,10 +82,7 @@ func (tree calculatingTree) SortTree() ([]string, error) {
 		}
 	}
 
-	// reverse
-	for i, j := 0, len(sortedNodes)-1; i < j; i, j = i+1, j-1 {
-		sortedNodes[i], sortedNodes[j] = sortedNodes[j], sortedNodes[i]
-	}
+	// сортировка представлена в обратном порядке, так как листья уже известны и их считать не надо
 
 	return sortedNodes, nil
 }
@@ -137,9 +134,9 @@ func processFormula(currentCellLink string, csv *format.Csv, formula parsing.For
 		col, row = format.ParseLink(formula.FirstOperand.GetLink())
 		cellValue = csv.Data[csv.RowHeaders[row]][csv.ColHeaders[col]]
 
-		if parsing.IsFormula(cellValue) {
-			processFormula(col+row, csv, parsing.ParseFormula(cellValue))
-		}
+		//if parsing.IsFormula(cellValue) {
+		//	processFormula(col+row, csv, parsing.ParseFormula(cellValue))
+		//}
 
 		// игнорируем ошибку, так как до этого были проверки на число в ячейке
 		parsedFirstOperand, _ = strconv.ParseInt(cellValue, 10, 32)
@@ -151,9 +148,9 @@ func processFormula(currentCellLink string, csv *format.Csv, formula parsing.For
 		col, row = format.ParseLink(formula.SecondOperand.GetLink())
 		cellValue = csv.Data[csv.RowHeaders[row]][csv.ColHeaders[col]]
 
-		if parsing.IsFormula(cellValue) {
-			processFormula(col+row, csv, parsing.ParseFormula(cellValue))
-		}
+		//if parsing.IsFormula(cellValue) {
+		//	processFormula(col+row, csv, parsing.ParseFormula(cellValue))
+		//}
 
 		// игнорируем ошибку, так как до этого были проверки на число в ячейке
 		parsedSecondOperand, _ = strconv.ParseInt(cellValue, 10, 32)
