@@ -68,10 +68,10 @@ func GetRegexOperations() string {
 	return regexOperations
 }
 
-func ParseFormula(cell string) (formula) {
+func ParseFormula(cellFormula string) (formula) {
 	// ошибки на формулы должны были быть проверены до (во время парсинга). Функция должна запускаться только для формул
-	cell = strings.ReplaceAll(cell, " ", "")
-	cell = strings.ReplaceAll(cell, "\t", "")
+	cellFormula = strings.ReplaceAll(cellFormula, " ", "")
+	cellFormula = strings.ReplaceAll(cellFormula, "\t", "")
 
 	regexOperations := GetRegexOperations()
 
@@ -80,7 +80,7 @@ func ParseFormula(cell string) (formula) {
 
 	regex := regexp.MustCompile(`[A-z0-9]+`)
 
-	notParsedOperands := regex.FindAllString(cell, 2)
+	notParsedOperands := regex.FindAllString(cellFormula, 2)
 
 	notParsedOperand := notParsedOperands[0]
 	numericValue, err := strconv.ParseInt(notParsedOperand, 10, 64)
@@ -106,7 +106,7 @@ func ParseFormula(cell string) (formula) {
 
 	regex = regexp.MustCompile(`[+` + regexOperations + `+]`)
 
-	action := operations.AllowedOperations[regex.FindAllString(cell, 1)[0]]
+	action := operations.AllowedOperations[regex.FindAllString(cellFormula, 1)[0]]
 
 	return formula{FirstOperand: firstOperand, SecondOperand: secondOperand, Action: action}
 }
