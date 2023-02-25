@@ -65,7 +65,7 @@ func CreateTree(csv format.Csv) (calculatingTree, error) {
 	return calculatingTree{nodes: nodes}, nil
 }
 
-// (!) сортировка не детерминирована из-за недетерминированности ключей в tree.nodes
+// (!) сортировка не детерминирована из-за недетерминированности порядка ключей в tree.nodes
 func (tree calculatingTree) SortTree() ([]string, error) {
 
 	nodesState := make(map[string]int, 0)
