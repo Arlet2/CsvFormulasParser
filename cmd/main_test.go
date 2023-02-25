@@ -21,7 +21,8 @@ var test2Csv string // с циклическими ссылками
 //go:embed test_csvs/test3.csv
 var test3Csv string // с разными видами формул
 
-//todo: написать readme
+//go:embed test_csvs/test4.csv
+var test4Csv string // с разными видами формул
 
 func TestMain(t *testing.T) {
 
@@ -153,6 +154,18 @@ func TestMain(t *testing.T) {
 			if buf.String() != ",A,B,Lol\n30,2,0,1\n2,15,3,0\n5,3,0,9\n" {
 				t.Logf("\tFail on test %d. Expected another output but got "+buf.String(), testID)
 				t.Fail()
+			}
+
+		}
+		testID++
+
+		t.Logf("\tTest %d: csv with extra cell", testID)
+		{
+			_, err := parsing.ParseCsv(strings.NewReader(test4Csv))
+
+			if err == nil {
+				t.Logf("\tFail on test %d. Expected error but nothing got", testID)
+				t.FailNow()
 			}
 
 		}

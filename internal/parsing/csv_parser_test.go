@@ -167,8 +167,8 @@ func TestParsing(t *testing.T) {
 
 			_, err := ParseCsv(reader)
 
-			if err != nil {
-				t.Logf("Fail on test %d. Found error: "+err.Error(), testID)
+			if err == nil {
+				t.Logf("Fail on test %d. Expected error but nothing found", testID)
 				t.Fail()
 			}
 

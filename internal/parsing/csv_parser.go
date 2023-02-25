@@ -47,6 +47,11 @@ func ParseCsv(file io.Reader) (format.Csv, error) {
 	var values []string
 	for scanner.Scan() {
 		values = strings.Split(scanner.Text(), ",")
+
+		if len(values) != len(colHeaders)+1 {
+			return format.Csv{}, errors.New("количество ячеек в строке должно быть равно количеству именованных заголовков").(CsvParseError)
+		}
+
 		rowIndex, err := strconv.ParseInt(values[0], 10, 64)
 
 		if err != nil {
