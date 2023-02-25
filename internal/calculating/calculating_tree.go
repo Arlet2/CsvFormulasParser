@@ -114,25 +114,28 @@ func (tree calculatingTree) dfc(currentNode string, nodesState *map[string]int, 
 	return nil
 }
 
-func CalculateNodes(csv format.Csv, sortedNodes []string) error {
-	var col, row string
+func CalculateNodes(csv *format.Csv, sortedNodes []string) error {
+	var col, row, cell string
 	for _, value := range sortedNodes {
 		col, row = format.ParseLink(value)
-		formula := parsing.ParseFormula(csv.Data[csv.ColHeaders[col]][csv.RowHeaders[row]])
-		err := processFormula(value, csv, formula)
-		if err != nil {
-			return err
+		cell = csv.Data[csv.RowHeaders[row]][csv.ColHeaders[col]]
+		if parsing.IsFormula(cell) {
+			formula := parsing.ParseFormula(cell)
+			err := processFormula(value, csv, formula)
+			if err != nil {
+				return err
+			}
 		}
 	}
 	return nil
 }
 
-func processFormula(currentCellLink string, csv format.Csv, formula parsing.Formula) error {
+func processFormula(currentCellLink string, csv *format.Csv, formula parsing.Formula) error {
 	var col, row, cellValue string
 	var parsedFirstOperand, parsedSecondOperand int64
 	if formula.FirstOperand.IsLink() {
 		col, row = format.ParseLink(formula.FirstOperand.GetLink())
-		cellValue = csv.Data[csv.ColHeaders[col]][csv.RowHeaders[row]]
+		cellValue = csv.Data[csv.RowHeaders[row]][csv.ColHeaders[col]]
 
 		if parsing.IsFormula(cellValue) {
 			processFormula(col+row, csv, parsing.ParseFormula(cellValue))
@@ -146,7 +149,7 @@ func processFormula(currentCellLink string, csv format.Csv, formula parsing.Form
 
 	if formula.SecondOperand.IsLink() {
 		col, row = format.ParseLink(formula.SecondOperand.GetLink())
-		cellValue = csv.Data[csv.ColHeaders[col]][csv.RowHeaders[row]]
+		cellValue = csv.Data[csv.RowHeaders[row]][csv.ColHeaders[col]]
 
 		if parsing.IsFormula(cellValue) {
 			processFormula(col+row, csv, parsing.ParseFormula(cellValue))
@@ -165,7 +168,7 @@ func processFormula(currentCellLink string, csv format.Csv, formula parsing.Form
 	}
 
 	col, row = format.ParseLink(currentCellLink)
-	csv.Data[csv.ColHeaders[col]][csv.RowHeaders[row]] = strconv.FormatInt(int64(calculatedValue), 10)
+	csv.Data[csv.RowHeaders[row]][csv.ColHeaders[col]] = strconv.FormatInt(int64(calculatedValue), 10)
 
 	return nil
 }
