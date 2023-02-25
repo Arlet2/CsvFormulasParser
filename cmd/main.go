@@ -52,7 +52,7 @@ func main() {
 		return
 	}
 
-	err = calculating.CalculateNodes(csv, sortedNodes)
+	err = calculating.CalculateNodes(&csv, sortedNodes)
 
 	if err != nil {
 		fmt.Println("Ошибка при вычислении ячеек: "+err.Error())
