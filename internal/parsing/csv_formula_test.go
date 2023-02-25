@@ -9,12 +9,7 @@ func TestCellParsing(t *testing.T) {
 
 		t.Logf("\tTest %d: check parsing only numbers formula", testID)
 		{
-			formula, err := ParseCell("=1+2")
-
-			if err != nil {
-				t.Logf("\tFail on test %d. Found error: "+err.Error(), testID)
-				t.FailNow()
-			}
+			formula := ParseFormula("=1+2")
 
 			if formula.FirstOperand.IsLink() {
 				t.Logf("\tFail on test %d. 1 was parsed like link", testID)
@@ -52,9 +47,7 @@ func TestCellParsing(t *testing.T) {
 
 		t.Logf("\tTest %d: check missing = symbol on start", testID)
 		{
-			_, err := ParseCell("Cell30+Cell20")
-
-			if err == nil {
+			if IsFormula("Cell30+Cell20") {
 				t.Logf("\tFail on test %d. Expected error but nothing got", testID)
 				t.FailNow()
 			}
@@ -63,12 +56,7 @@ func TestCellParsing(t *testing.T) {
 
 		t.Logf("\tTest %d: check parsing formula only with links", testID)
 		{
-			formula, err := ParseCell("=Cell30+Cell20")
-
-			if err != nil {
-				t.Logf("\tFail on test %d. Found error: "+err.Error(), testID)
-				t.FailNow()
-			}
+			formula := ParseFormula("=Cell30+Cell20")
 
 			if !formula.FirstOperand.IsLink() {
 				t.Logf("\tFail on test %d. Cell30 was parsed like constant", testID)
@@ -106,9 +94,7 @@ func TestCellParsing(t *testing.T) {
 
 		t.Logf("\tTest %d: check not allowed operation", testID)
 		{
-			_, err := ParseCell("=2^2")
-
-			if err == nil {
+			if IsFormula("=2^2") {
 				t.Logf("\tFail on test %d. Expected error but nothing got", testID)
 				t.FailNow()
 			}
@@ -117,12 +103,7 @@ func TestCellParsing(t *testing.T) {
 
 		t.Logf("\tTest %d: check link and constant formula", testID)
 		{
-			formula, err := ParseCell("=2+Cell30")
-
-			if err != nil {
-				t.Logf("\tFail on test %d. Found error: "+err.Error(), testID)
-				t.FailNow()
-			}
+			formula := ParseFormula("=2+Cell30")
 
 			if formula.FirstOperand.IsLink() {
 				t.Logf("\tFail on test %d. 2 was parsed like link", testID)

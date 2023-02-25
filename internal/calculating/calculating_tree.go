@@ -20,10 +20,7 @@ func CreateTree(csv format.Csv) (calculatingTree, error) {
 				if err != nil {
 					panic(err)
 				}
-				formula, err := parsing.ParseCell(cell)
-				if err != nil {
-					return calculatingTree{}, err
-				}
+				formula := parsing.ParseFormula(cell)
 
 				// если формулу можно посчитать сразу, то вычисляем на месте
 				if !formula.FirstOperand.IsLink() && !formula.SecondOperand.IsLink() {

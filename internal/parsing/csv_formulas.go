@@ -1,7 +1,6 @@
 package parsing
 
 import (
-	"errors"
 	"regexp"
 	"strconv"
 	"strings"
@@ -69,20 +68,12 @@ func GetRegexOperations() string {
 	return regexOperations
 }
 
-func ParseCell(cell string) (formula, error) {
-	if cell[0] != '=' {
-		return formula{}, errors.New(cell + " не формула. Формулы начинаются с =").(FormulaParseError)
-	}
+func ParseFormula(cell string) (formula) {
+	// ошибки на формулы должны были быть проверены до (во время парсинга). Функция должна запускаться только для формул
 	cell = strings.ReplaceAll(cell, " ", "")
 	cell = strings.ReplaceAll(cell, "\t", "")
 
 	regexOperations := GetRegexOperations()
-
-	if !IsFormula(cell) {
-		regexOperations = strings.ReplaceAll(regexOperations, "\\", "")
-		return formula{},
-			errors.New(cell + " неправильная формула. Формула должна быть в формате =OP1 [" + regexOperations + "] OP2")
-	}
 
 	// Дальнейшие регулярки точно найдут совпадения,
 	// так как они являются лишь частями регулярки, которая проверялась до этого (функция IsFormula)
@@ -117,5 +108,5 @@ func ParseCell(cell string) (formula, error) {
 
 	action := operations.AllowedOperations[regex.FindAllString(cell, 1)[0]]
 
-	return formula{FirstOperand: firstOperand, SecondOperand: secondOperand, Action: action}, nil
+	return formula{FirstOperand: firstOperand, SecondOperand: secondOperand, Action: action}
 }
