@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"test_task/internal/calculating"
-	"test_task/internal/operations"
 	"test_task/internal/parsing"
 )
 
@@ -33,15 +32,8 @@ func main() {
 
 	tree, err := calculating.CreateTree(csv)
 
-	//todo разобраться с кастингом ошибок???
 	if err != nil {
-		if _, ok := err.(calculating.TreeCreatingError); ok {
-			fmt.Println("Ошибка при работе с ячейками: " + err.Error())
-		} else if _, ok := err.(operations.CalculatingError); ok {
-			fmt.Println("Ошибка вычислений: " + err.Error())
-		} else {
-			fmt.Println("Непредвиденная ошибка: ", err.Error())
-		}
+		fmt.Println("Ошибка при работе с ячейками: " + err.Error())
 		return
 	}
 
