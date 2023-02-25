@@ -37,6 +37,7 @@ func CreateTree(csv format.Csv) (calculatingTree, error) {
 					continue
 				}
 
+				// если вершины не существует, то создаем запись о ней
 				if _, ok := nodes[link]; !ok {
 					nodes[link] = make([]string, 0)
 				}
