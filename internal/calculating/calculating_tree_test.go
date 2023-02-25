@@ -2,7 +2,6 @@ package calculating
 
 import (
 	"bytes"
-	"fmt"
 	"reflect"
 	"strings"
 	"test_task/internal/parsing"
@@ -61,8 +60,7 @@ func TestCalculatingTreeCreating(t *testing.T) {
 				t.Fail()
 			}
 
-			// reflect.DeepEqual не справился..
-			if fmt.Sprint(tree) != fmt.Sprint(map[string][]string{"B2": {"A1", "Cell30"}, "B30": {"B1", "A1"}}) {
+			if reflect.DeepEqual(tree, map[string][]string{"B2": {"A1", "Cell30"}, "B30": {"B1", "A1"}}) {
 				t.Logf("\tFail on test %d. Expected another tree but found: %q", testID, tree)
 				t.Fail()
 			}
