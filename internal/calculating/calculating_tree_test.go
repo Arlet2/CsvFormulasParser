@@ -3,6 +3,7 @@ package calculating
 import (
 	"bytes"
 	"fmt"
+	"reflect"
 	"strings"
 	"test_task/internal/parsing"
 	"testing"
@@ -128,5 +129,46 @@ func TestCalculatingTreeCreating(t *testing.T) {
 		}
 		testID++
 
+	}
+}
+
+func TestSortingTree(t *testing.T) {
+	t.Log("Start check sorting tree.")
+	{
+		testID := 0
+
+		t.Logf("\tTest %d: check sorting tree from example csv", testID)
+		{
+			tree := calculatingTree{nodes: map[string][]string{"B30": {"B1", "A1"}, "B2": {"A1", "Cell30"}}}
+
+			sortedNodes, err := tree.SortTree()
+
+			if err != nil {
+				t.Logf("\tFail on test %d. Found error: "+err.Error(), testID)
+				t.Fail()
+			}
+
+
+			if !reflect.DeepEqual(sortedNodes, []string{"B2", "Cell30", "B30", "A1", "B1"}) &&
+				!reflect.DeepEqual(sortedNodes, []string{"B30", "B1", "B2", "Cell30", "A1"}) {
+				t.Logf("\tFail on test %d. Found another (maybe correct) sorting: %q", testID, sortedNodes)
+				t.Fail()
+			}
+		}
+		testID++
+
+		t.Logf("\tTest %d: check sorting tree with cycle", testID)
+		{
+			tree := calculatingTree{nodes: map[string][]string{
+				"A1": {"B2", "C6"}, "B2": {"C6", "B3"}, "B3": {"C7", "B4"}, "B4": {"A1"}}}
+
+			_, err := tree.SortTree()
+
+			if err == nil {
+				t.Logf("\tFail on test %d. Expected error but nothing got", testID)
+				t.Fail()
+			}
+		}
+		testID++
 	}
 }

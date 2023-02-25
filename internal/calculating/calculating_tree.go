@@ -9,10 +9,13 @@ import (
 )
 
 type TreeCreatingError error
-type calculatingTree map[string][]string
+type FormulaCycleError error
+type calculatingTree struct {
+	nodes map[string][]string
+}
 
 func CreateTree(csv format.Csv) (calculatingTree, error) {
-	tree := make(map[string][]string, 0)
+	nodes := make(map[string][]string, 0)
 	for index, line := range csv.Data {
 		for jndex, cell := range line {
 			if parsing.IsFormula(cell) {
@@ -34,8 +37,8 @@ func CreateTree(csv format.Csv) (calculatingTree, error) {
 					continue
 				}
 
-				if _, ok := tree[link]; !ok {
-					tree[link] = make([]string, 0)
+				if _, ok := nodes[link]; !ok {
+					nodes[link] = make([]string, 0)
 				}
 
 				if formula.FirstOperand.IsLink() {
@@ -44,7 +47,7 @@ func CreateTree(csv format.Csv) (calculatingTree, error) {
 							errors.New("ячейки " + formula.FirstOperand.GetLink() + " не существует").(TreeCreatingError)
 					}
 
-					tree[link] = append(tree[link], formula.FirstOperand.GetLink())
+					nodes[link] = append(nodes[link], formula.FirstOperand.GetLink())
 				}
 
 				if formula.SecondOperand.IsLink() {
@@ -53,11 +56,64 @@ func CreateTree(csv format.Csv) (calculatingTree, error) {
 							errors.New("ячейки " + formula.SecondOperand.GetLink() + " не существует").(TreeCreatingError)
 					}
 
-					tree[link] = append(tree[link], formula.SecondOperand.GetLink())
+					nodes[link] = append(nodes[link], formula.SecondOperand.GetLink())
 				}
 			}
 		}
 	}
 
-	return tree, nil
+	return calculatingTree{nodes: nodes}, nil
+}
+
+// (!) сортировка не детерминирована из-за недетерминированности ключей в tree.nodes
+func (tree calculatingTree) SortTree() ([]string, error){
+	
+	nodesState := make(map[string]int, 0)
+	sortedNodes := make([]string, 0)
+
+	for key := range tree.nodes {
+		nodesState[key] = 0
+	}
+
+	for key := range tree.nodes {
+		err := tree.dfc(key, &nodesState, &sortedNodes)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	// reverse
+	for i, j := 0, len(sortedNodes)-1; i < j; i, j = i+1, j-1 {
+		sortedNodes[i], sortedNodes[j] = sortedNodes[j], sortedNodes[i]
+	}
+	
+	return sortedNodes, nil
+}
+
+func (tree calculatingTree) dfc(currentNode string, nodesState *map[string]int, sortedNodes *[]string) (error) {
+
+	if (*nodesState)[currentNode] == 1 {
+		return errors.New("обнаружена циклическая зависимость у формул").(FormulaCycleError)
+	}
+	if (*nodesState)[currentNode] == 2 {
+		return nil
+	}
+
+	(*nodesState)[currentNode] = 1
+
+	for _, value := range tree.nodes[currentNode] {
+		err := tree.dfc(value, nodesState, sortedNodes)
+		if err != nil {
+			return err
+		}
+	}
+
+	(*nodesState)[currentNode] = 2
+	*sortedNodes = append(*sortedNodes, currentNode)
+
+	return nil
+}
+
+func (tree calculatingTree) Calculate(csv format.Csv) (error) {
+	return nil
 }
