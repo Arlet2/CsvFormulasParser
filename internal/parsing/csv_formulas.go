@@ -45,7 +45,7 @@ func (constant) GetLink() string {
 	return ""
 }
 
-type formula struct {
+type Formula struct {
 	FirstOperand  operand
 	SecondOperand operand
 	Action        operations.Operation
@@ -68,7 +68,7 @@ func GetRegexOperations() string {
 	return regexOperations
 }
 
-func ParseFormula(cellFormula string) (formula) {
+func ParseFormula(cellFormula string) (Formula) {
 	// ошибки на формулы должны были быть проверены до (во время парсинга). Функция должна запускаться только для формул
 	cellFormula = strings.ReplaceAll(cellFormula, " ", "")
 	cellFormula = strings.ReplaceAll(cellFormula, "\t", "")
@@ -108,5 +108,5 @@ func ParseFormula(cellFormula string) (formula) {
 
 	action := operations.AllowedOperations[regex.FindAllString(cellFormula, 1)[0]]
 
-	return formula{FirstOperand: firstOperand, SecondOperand: secondOperand, Action: action}
+	return Formula{FirstOperand: firstOperand, SecondOperand: secondOperand, Action: action}
 }
