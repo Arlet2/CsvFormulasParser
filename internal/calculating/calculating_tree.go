@@ -66,8 +66,8 @@ func CreateTree(csv format.Csv) (calculatingTree, error) {
 }
 
 // (!) сортировка не детерминирована из-за недетерминированности ключей в tree.nodes
-func (tree calculatingTree) SortTree() ([]string, error){
-	
+func (tree calculatingTree) SortTree() ([]string, error) {
+
 	nodesState := make(map[string]int, 0)
 	sortedNodes := make([]string, 0)
 
@@ -86,11 +86,11 @@ func (tree calculatingTree) SortTree() ([]string, error){
 	for i, j := 0, len(sortedNodes)-1; i < j; i, j = i+1, j-1 {
 		sortedNodes[i], sortedNodes[j] = sortedNodes[j], sortedNodes[i]
 	}
-	
+
 	return sortedNodes, nil
 }
 
-func (tree calculatingTree) dfc(currentNode string, nodesState *map[string]int, sortedNodes *[]string) (error) {
+func (tree calculatingTree) dfc(currentNode string, nodesState *map[string]int, sortedNodes *[]string) error {
 
 	if (*nodesState)[currentNode] == 1 {
 		return errors.New("обнаружена циклическая зависимость у формул").(FormulaCycleError)
@@ -114,6 +114,58 @@ func (tree calculatingTree) dfc(currentNode string, nodesState *map[string]int, 
 	return nil
 }
 
-func (tree calculatingTree) Calculate(csv format.Csv) (error) {
+func CalculateNodes(csv format.Csv, sortedNodes []string) error {
+	var col, row string
+	for _, value := range sortedNodes {
+		col, row = format.ParseLink(value)
+		formula := parsing.ParseFormula(csv.Data[csv.ColHeaders[col]][csv.RowHeaders[row]])
+		err := processFormula(value, csv, formula)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func processFormula(currentCellLink string, csv format.Csv, formula parsing.Formula) error {
+	var col, row, cellValue string
+	var parsedFirstOperand, parsedSecondOperand int64
+	if formula.FirstOperand.IsLink() {
+		col, row = format.ParseLink(formula.FirstOperand.GetLink())
+		cellValue = csv.Data[csv.ColHeaders[col]][csv.RowHeaders[row]]
+
+		if parsing.IsFormula(cellValue) {
+			processFormula(col+row, csv, parsing.ParseFormula(cellValue))
+		}
+
+		// игнорируем ошибку, так как до этого были проверки на число в ячейке
+		parsedFirstOperand, _ = strconv.ParseInt(cellValue, 10, 32)
+	} else {
+		parsedFirstOperand = int64(formula.FirstOperand.GetConstant())
+	}
+
+	if formula.SecondOperand.IsLink() {
+		col, row = format.ParseLink(formula.SecondOperand.GetLink())
+		cellValue = csv.Data[csv.ColHeaders[col]][csv.RowHeaders[row]]
+
+		if parsing.IsFormula(cellValue) {
+			processFormula(col+row, csv, parsing.ParseFormula(cellValue))
+		}
+
+		// игнорируем ошибку, так как до этого были проверки на число в ячейке
+		parsedSecondOperand, _ = strconv.ParseInt(cellValue, 10, 32)
+	} else {
+		parsedSecondOperand = int64(formula.SecondOperand.GetConstant())
+	}
+
+	calculatedValue, err := formula.Action(int(parsedFirstOperand), int(parsedSecondOperand))
+
+	if err != nil {
+		return err
+	}
+
+	col, row = format.ParseLink(currentCellLink)
+	csv.Data[csv.ColHeaders[col]][csv.RowHeaders[row]] = strconv.FormatInt(int64(calculatedValue), 10)
+
 	return nil
 }
